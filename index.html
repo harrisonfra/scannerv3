@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <title>VIN Data Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111318">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="UAR.png">
+    <link rel="icon" type="image/png" href="UAR.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2/dist/quagga.min.js"></script>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <span class="brand">VIN Viewer</span>
+        <div class="topbar-actions">
+            <a href="full/index.html" class="topbar-link">Full Scanner ↗</a>
+            <button id="theme-btn" class="icon-btn" title="Toggle theme">◐</button>
+            <button id="toggle-scanner-btn" class="scan-btn">Scan VIN</button>
+        </div>
+    </div>
+
+    <div class="search-wrap">
+        <input type="text" id="search" placeholder="Search make, model, year, part…">
+    </div>
+
+    <div class="controls-row">
+        <div class="chips-scroll">
+            <div id="item-filters"></div>
+        </div>
+        <div class="controls-right">
+            <button id="clear-filters" class="clear-btn">Clear</button>
+            <select id="sort-select">
+                <option value="">Sort by…</option>
+                <option value="Year">Year</option>
+                <option value="Make">Make</option>
+                <option value="Model">Model</option>
+                <option value="Average Price">Avg Price</option>
+                <option value="Median Price">Median</option>
+                <option value="Number of Sales">Sales</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Scanner card (inline) -->
+    <div id="scanner-card" class="scanner-card hidden">
+        <div class="scanner-card-header">
+            <span class="scanner-card-title">VIN Scanner</span>
+            <button id="scanner-close-btn" class="scanner-close">✕</button>
+        </div>
+        <div id="scanner-viewport" class="scanner-viewport">
+            <div class="scan-box"></div>
+        </div>
+        <div class="scanner-controls">
+            <button id="scanner-start-btn">Start</button>
+            <button id="scanner-stop-btn">Stop</button>
+        </div>
+        <input type="text" id="vin-input" placeholder="VIN" maxlength="17" />
+        <button id="scanner-decode-btn">Decode VIN</button>
+        <div id="scanner-status" class="scanner-status">No barcode detected</div>
+        <div id="scanner-error" class="scanner-error"></div>
+        <div id="scanner-result"></div>
+    </div>
+
+    <!-- Data cards -->
+    <div id="cards-container"></div>
+
+    <!-- Details bottom sheet -->
+    <div id="details" class="hidden bottom-sheet">
+        <div class="bottom-sheet-handle"></div>
+        <h2 class="sheet-title">Vehicle Details</h2>
+        <div class="sheet-row"><span class="sheet-lbl">VIN</span><span id="d-vin" class="sheet-val mono"></span></div>
+        <div class="sheet-row"><span class="sheet-lbl">Query</span><span id="d-query" class="sheet-val"></span></div>
+        <div class="sheet-row"><span class="sheet-lbl">Year</span><span id="d-year" class="sheet-val"></span></div>
+        <div class="sheet-row"><span class="sheet-lbl">Make</span><span id="d-make" class="sheet-val"></span></div>
+        <div class="sheet-row"><span class="sheet-lbl">Model</span><span id="d-model" class="sheet-val"></span></div>
+        <div class="sheet-row"><span class="sheet-lbl">Avg Price</span><span id="d-avg" class="sheet-val price"></span></div>
+        <div class="sheet-row"><span class="sheet-lbl">Median</span><span id="d-med" class="sheet-val"></span></div>
+        <div class="sheet-row"><span class="sheet-lbl">Sales</span><span id="d-sales" class="sheet-val"></span></div>
+        <button id="close-details-btn" class="close-sheet-btn">Close</button>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,654 @@
+/* ===== THEME TOKENS (mirrors VIN Viewer: dark default + .light override) ===== */
+:root {
+    --bg-page:         #0f1014;
+    --bg-topbar:       #111318;
+    --bg-card:         #1e2129;
+    --bg-card-hover:   #23262f;
+    --bg-chip:         #2a2d36;
+    --bg-chip-active:  #3b82f6;
+    --border:          #2a2d36;
+    --text-primary:    #f0f0f0;
+    --text-secondary:  #9ca3af;
+    --text-muted:      #6b7280;
+    --accent:          #3b82f6;
+    --green:           #22c55e;
+    --danger:          #f87171;
+    --warning:         #fbbf24;
+    --btn-ghost-bg:    #2a2d36;
+    --btn-ghost-text:  #e5e7eb;
+    --mono:            #888;
+
+    /* tinted state surfaces */
+    --danger-bg:       rgba(248, 113, 113, 0.12);
+    --warning-bg:      rgba(245, 158, 11, 0.12);
+    --warning-border:  rgba(245, 158, 11, 0.35);
+    --warning-text:    #fbbf24;
+    --green-bg:        rgba(34, 197, 94, 0.12);
+    --green-border:    rgba(34, 197, 94, 0.35);
+    --green-text:      #4ade80;
+    --chip-amber-bg:   rgba(245, 158, 11, 0.18);
+    --chip-amber-text: #fbbf24;
+}
+
+body.light {
+    --bg-page:         #f0f2f5;
+    --bg-topbar:       #ffffff;
+    --bg-card:         #ffffff;
+    --bg-card-hover:   #fafbff;
+    --bg-chip:         #f3f4f6;
+    --bg-chip-active:  #3b82f6;
+    --border:          #e5e7eb;
+    --text-primary:    #111827;
+    --text-secondary:  #6b7280;
+    --text-muted:      #9ca3af;
+    --accent:          #3b82f6;
+    --green:           #059669;
+    --danger:          #ef4444;
+    --warning:         #f59e0b;
+    --btn-ghost-bg:    #f3f4f6;
+    --btn-ghost-text:  #374151;
+    --mono:            #9ca3af;
+
+    --danger-bg:       #fef2f2;
+    --warning-bg:      #fffbeb;
+    --warning-border:  #fde68a;
+    --warning-text:    #92400e;
+    --green-bg:        #f0fdf4;
+    --green-border:    #bbf7d0;
+    --green-text:      #059669;
+    --chip-amber-bg:   #fef3c7;
+    --chip-amber-text: #92400e;
+}
+
+/* ===== BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: color 0.2s;
+}
+
+.hidden { display: none !important; }
+
+/* ===== TOPBAR ===== */
+.topbar {
+    background: var(--bg-topbar);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+}
+
+.back-link {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: color 0.15s;
+    white-space: nowrap;
+}
+
+.back-link:hover { color: var(--accent); }
+
+.brand {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+    flex: 1;
+    text-align: center;
+}
+
+.icon-btn {
+    background: var(--bg-chip);
+    border: none;
+    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+.icon-btn:hover { background: var(--border); }
+
+/* ===== HISTORY PANEL ===== */
+.history-panel {
+    background: var(--bg-topbar);
+    border-bottom: 1px solid var(--border);
+    max-height: 340px;
+    overflow-y: auto;
+    position: sticky;
+    top: 54px;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.history-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.history-clear-btn {
+    background: none;
+    border: none;
+    font-size: 12px;
+    color: var(--danger);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.history-clear-btn:hover { background: var(--danger-bg); }
+
+.history-list { padding: 4px 0; }
+
+.history-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+}
+
+.history-item:last-child { border-bottom: none; }
+.history-item:hover { background: var(--bg-chip); }
+
+.history-item-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 3px;
+}
+
+.history-vehicle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.history-time {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.history-vin {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.history-empty {
+    padding: 20px 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* ===== PAGE ===== */
+.page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ===== SCANNER CARD ===== */
+.scanner-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.scanner-viewport {
+    width: 100%;
+    height: 240px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #000;
+}
+
+.scanner-viewport video,
+.scanner-viewport canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+canvas.drawingBuffer {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.scan-box {
+    position: absolute;
+    border: 2.5px solid #00ff41;
+    box-shadow: 0 0 0 2000px rgba(0,0,0,0.35);
+    width: 80%;
+    height: 56px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+/* ===== SCANNER CONTROLS ===== */
+.scanner-controls {
+    display: flex;
+    gap: 8px;
+}
+
+/* ===== VIN INPUT ROW ===== */
+.vin-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.vin-input-wrap {
+    flex: 1;
+    position: relative;
+}
+
+.vin-input {
+    width: 100%;
+    background: var(--bg-chip);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    padding: 10px 48px 10px 14px;
+    font-size: 15px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.vin-input::placeholder { color: var(--text-muted); font-family: inherit; letter-spacing: 0; }
+.vin-input:focus  { border-color: var(--accent); }
+.vin-input.ready  { border-color: var(--green); }
+
+.vin-counter {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.vin-counter.partial { color: var(--text-secondary); }
+.vin-counter.valid   { color: var(--green); }
+
+.scanner-status {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.scanner-error {
+    font-size: 13px;
+    color: var(--danger);
+    min-height: 0;
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+    flex: 1;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    padding: 11px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.btn-primary:hover { opacity: 0.85; }
+
+.btn-ghost {
+    flex: 1;
+    background: var(--btn-ghost-bg);
+    border: none;
+    border-radius: 10px;
+    padding: 11px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--btn-ghost-text);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-ghost:hover { background: var(--border); }
+
+.btn-accent {
+    background: var(--green);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+}
+
+.btn-accent:hover { opacity: 0.85; }
+
+/* ===== TORCH BUTTON ===== */
+#torchBtn {
+    flex: 0 0 auto;
+    padding: 11px 14px;
+}
+
+/* ===== RESULTS ===== */
+.loading {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 24px 0;
+}
+
+/* Checksum warning banner */
+.checksum-warning {
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--warning-text);
+    margin-bottom: 12px;
+}
+
+/* Result header card */
+.result-header {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Vehicle image */
+.vehicle-image-wrap {
+    width: 100%;
+    background: var(--bg-chip);
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.image-link {
+    display: block;
+    width: 100%;
+    position: relative;
+}
+
+.vehicle-image {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    display: block;
+}
+
+.image-credit {
+    position: absolute;
+    bottom: 6px;
+    right: 8px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.75);
+    background: rgba(0,0,0,0.4);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.image-placeholder {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 32px;
+}
+
+.image-unavailable {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 20px;
+}
+
+/* Vehicle name + VIN */
+.result-hero {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.result-year-make {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.result-vin {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+/* Result action buttons (copy / share / parts) */
+.result-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    background: var(--bg-chip);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--btn-ghost-text);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background 0.15s;
+}
+
+.action-btn:hover { background: var(--border); }
+
+/* Recall button */
+.recall-btn {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--border);
+    padding: 13px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--warning);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+}
+
+.recall-btn:hover { background: var(--warning-bg); }
+.recall-btn:disabled { color: var(--text-secondary); cursor: default; }
+
+/* ===== RECALL SECTION ===== */
+.recall-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recall-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    padding: 0 2px;
+}
+
+.recall-none {
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-text);
+}
+
+.recall-error {
+    color: var(--danger);
+    font-size: 13px;
+    padding: 8px 0;
+}
+
+.recall-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--warning);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.recall-top {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.recall-campaign {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    background: var(--chip-amber-bg);
+    color: var(--chip-amber-text);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-weight: 700;
+}
+
+.recall-component {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.recall-summary,
+.recall-consequence,
+.recall-remedy,
+.recall-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ===== INFO CARDS ===== */
+.result-section-heading {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 2px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.info-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.info-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+
+/* ===== EXPORT BUTTON ===== */
+.export-btn {
+    display: block;
+    width: 100%;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    padding: 13px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 4px;
+    transition: opacity 0.15s;
+}
+
+.export-btn:hover    { opacity: 0.85; }
+.export-btn:disabled { opacity: 0.5; cursor: default; }

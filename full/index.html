@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VIN Scanner</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2/dist/quagga.min.js"></script>
+    <link rel="stylesheet" href="vinscanner.css" />
+    <link rel="manifest" href="manifest.json">
+</head>
+
+<body class="light">
+
+    <div class="topbar">
+        <a href="../index.html" class="back-link">← VIN Viewer</a>
+        <span class="brand">VIN Scanner</span>
+        <button id="themeBtn" class="icon-btn" title="Toggle theme">◐</button>
+        <button id="historyBtn" class="icon-btn" title="Recent scans">🕐</button>
+        <button id="refreshBtn" class="icon-btn" title="Hard refresh">↺</button>
+    </div>
+
+    <div id="history-panel" class="history-panel hidden">
+        <div class="history-header">
+            <span class="history-title">Recent Scans</span>
+            <button id="clearHistoryBtn" class="history-clear-btn">Clear All</button>
+        </div>
+        <div id="history-list" class="history-list"></div>
+    </div>
+
+    <div class="page">
+
+        <div class="scanner-card">
+            <div id="interactive" class="scanner-viewport">
+                <div class="scan-box"></div>
+            </div>
+            <div class="scanner-controls">
+                <button id="startBtn" class="btn-primary">Scan Barcode</button>
+                <button id="ocrBtn" class="btn-primary">Scan Text</button>
+                <button id="torchBtn" class="btn-ghost hidden">🔦</button>
+                <button id="stopBtn" class="btn-ghost">Stop</button>
+            </div>
+            <div class="vin-row">
+                <div class="vin-input-wrap">
+                    <input type="text" id="vinInput" placeholder="VIN (17 characters)" maxlength="17" class="vin-input"
+                        autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" />
+                    <span id="vin-counter" class="vin-counter">0 / 17</span>
+                </div>
+                <button id="decodeBtn" class="btn-accent">Decode</button>
+            </div>
+            <div id="barcode-result" class="scanner-status">No barcode detected</div>
+            <div id="error" class="scanner-error"></div>
+        </div>
+
+        <div id="result"></div>
+
+    </div>
+
+    <script src="vinscanner.js"></script>
+
+</body>
+
+</html>

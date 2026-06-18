@@ -1,0 +1,23 @@
+[
+  {
+    "make": "toyota",
+    "model": "corolla",
+    "part": "*",
+    "lo": 1993,
+    "hi": 1997
+  },
+  {
+    "make": "toyota",
+    "model": "corolla",
+    "part": "*",
+    "lo": 1998,
+    "hi": 2002
+  },
+  {
+    "make": "toyota",
+    "model": "corolla",
+    "part": "*",
+    "lo": 2003,
+    "hi": 2008
+  }
+]
