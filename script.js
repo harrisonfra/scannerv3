@@ -458,6 +458,12 @@ async function decodeVIN() {
         scannerResult.innerHTML = html;
         renderMatchesTable();
 
+        // No inventory for this vehicle yet — log the VIN so it can be scraped
+        // later (see the Missing VINs panel + the hub's import).
+        if (scannerMatches.length === 0) {
+            logUnmatchedVin(vin, year, make, model);
+        }
+
     } catch (err) {
         console.error(err);
         scannerError.textContent = "Failed to fetch VIN data from NHTSA.";
@@ -550,17 +556,143 @@ function buildEbayURL(item) {
     return `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(queryText)}&LH_Sold=1&LH_Complete=1&LH_ItemCondition=4`;
 }
 
-// Like buildEbayURL, but when an interchange range is known for the scanned
-// vehicle+part, search the whole range (e.g. "1998-2002 toyota corolla
-// headlight") for a wider, more accurate set of sold comps.
+// eBay search for a matched part, using the EXACT year decoded from the scanned
+// VIN — never the interchange range. Interchange decides which inventory rows
+// surface (so a 1998 part shows when scanning a 2001), but the sold-comp search
+// stays on the source vehicle's own year, e.g. "2001 toyota corolla gauge
+// cluster".
 function buildInterchangeEbayURL(item) {
-    const r = interchangeRange(scannedCtx.make, scannedCtx.model, item._item, scannedCtx.year);
-    if (r && r[0] !== r[1]) {
-        const q = `${r[0]}-${r[1]} ${scannedCtx.make} ${scannedCtx.model} ${item._item}`.trim();
+    if (scannedCtx.year) {
+        const q = `${scannedCtx.year} ${scannedCtx.make} ${scannedCtx.model} ${item._item}`.trim();
         return `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(q)}&LH_Sold=1&LH_Complete=1&LH_ItemCondition=4`;
     }
     return buildEbayURL(item);
 }
+
+/* =========================
+   MISSING VINs (unmatched scans)
+========================= */
+// Scans with no matching inventory are stashed in localStorage so they can be
+// fed back into the hub's VIN list and scraped later. Works offline / on the
+// static GitHub Pages build (no backend required).
+const MISSING_KEY = "unmatchedVins";
+
+function loadMissingVins() {
+    try {
+        const v = JSON.parse(localStorage.getItem(MISSING_KEY) || "[]");
+        return Array.isArray(v) ? v : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function logUnmatchedVin(vin, year, make, model) {
+    const list = loadMissingVins();
+    if (list.some(e => e.vin === vin)) {
+        renderMissingVins();
+        return;                       // already logged — don't duplicate
+    }
+    list.push({
+        vin,
+        year: year === "N/A" ? "" : year,
+        make: make === "N/A" ? "" : make,
+        model: model === "N/A" ? "" : model,
+        ts: Date.now()
+    });
+    localStorage.setItem(MISSING_KEY, JSON.stringify(list));
+    renderMissingVins();
+}
+
+function clearMissingVins() {
+    localStorage.removeItem(MISSING_KEY);
+    renderMissingVins();
+}
+
+function removeMissingVin(vin) {
+    localStorage.setItem(MISSING_KEY,
+        JSON.stringify(loadMissingVins().filter(e => e.vin !== vin)));
+    renderMissingVins();
+}
+
+async function copyMissingVins() {
+    const text = loadMissingVins().map(e => e.vin).join("\n");
+    if (!text) return;
+    try {
+        await navigator.clipboard.writeText(text);
+        flashMissingNote("Copied " + loadMissingVins().length + " VIN(s) to clipboard");
+    } catch (e) {
+        // Clipboard API unavailable (insecure context) — select the textarea instead
+        const ta = document.getElementById("missing-export");
+        if (ta) { ta.value = text; ta.classList.remove("hidden"); ta.select(); }
+    }
+}
+
+function flashMissingNote(msg) {
+    const n = document.getElementById("missing-note");
+    if (!n) return;
+    n.textContent = msg;
+    clearTimeout(flashMissingNote._t);
+    flashMissingNote._t = setTimeout(() => { n.textContent = ""; }, 2500);
+}
+
+function renderMissingVins() {
+    const wrap = document.getElementById("missing-vins");
+    const badge = document.getElementById("missing-count");
+    if (!wrap) return;
+    const list = loadMissingVins();
+
+    if (badge) {
+        badge.textContent = list.length || "";
+        badge.classList.toggle("hidden", list.length === 0);
+    }
+
+    if (list.length === 0) {
+        wrap.innerHTML = `<p class="no-matches" style="color:var(--text-muted);">No missing VINs logged. Scans with no matching inventory show up here.</p>`;
+        return;
+    }
+
+    let html = `<div class="missing-actions">
+        <button id="missing-copy-btn" class="btn-primary">Copy all VINs</button>
+        <button id="missing-clear-btn" class="btn-ghost">Clear all</button>
+        <span id="missing-note" class="missing-note"></span>
+    </div>
+    <textarea id="missing-export" class="hidden" readonly rows="4"></textarea>
+    <table class="scanner-matches-table"><thead><tr>
+        <th>VIN</th><th>Vehicle</th><th></th>
+    </tr></thead><tbody>`;
+    for (const e of list) {
+        const veh = [e.year, e.make, e.model].filter(Boolean).join(" ") || "—";
+        html += `<tr>
+            <td class="mono">${escapeHtml(e.vin)}</td>
+            <td>${escapeHtml(veh)}</td>
+            <td><button class="missing-del" data-vin="${escapeHtml(e.vin)}" title="Remove">✕</button></td>
+        </tr>`;
+    }
+    html += `</tbody></table>`;
+    wrap.innerHTML = html;
+
+    document.getElementById("missing-copy-btn").addEventListener("click", copyMissingVins);
+    document.getElementById("missing-clear-btn").addEventListener("click", () => {
+        if (confirm("Clear all logged missing VINs?")) clearMissingVins();
+    });
+    wrap.querySelectorAll(".missing-del").forEach(b =>
+        b.addEventListener("click", () => removeMissingVin(b.getAttribute("data-vin"))));
+}
+
+document.getElementById("toggle-missing-btn").addEventListener("click", () => {
+    const panel = document.getElementById("missing-card");
+    panel.classList.toggle("hidden");
+    if (!panel.classList.contains("hidden")) {
+        renderMissingVins();
+        panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+});
+
+document.getElementById("missing-close-btn").addEventListener("click", () => {
+    document.getElementById("missing-card").classList.add("hidden");
+});
+
+renderMissingVins();   // initialize the toolbar badge on load
 
 /* =========================
    PWA INSTALL

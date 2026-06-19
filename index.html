@@ -22,6 +22,7 @@
         <div class="topbar-actions">
             <a href="full/index.html" class="topbar-link">Full Scanner ↗</a>
             <button id="theme-btn" class="icon-btn" title="Toggle theme">◐</button>
+            <button id="toggle-missing-btn" class="icon-btn" title="Missing VINs to scrape">⚑<span id="missing-count" class="missing-badge hidden"></span></button>
             <button id="toggle-scanner-btn" class="scan-btn">Scan VIN</button>
         </div>
     </div>
@@ -66,6 +67,15 @@
         <div id="scanner-status" class="scanner-status">No barcode detected</div>
         <div id="scanner-error" class="scanner-error"></div>
         <div id="scanner-result"></div>
+    </div>
+
+    <!-- Missing VINs panel (unmatched scans, for later scraping) -->
+    <div id="missing-card" class="scanner-card hidden">
+        <div class="scanner-card-header">
+            <span class="scanner-card-title">Missing VINs to scrape</span>
+            <button id="missing-close-btn" class="scanner-close">✕</button>
+        </div>
+        <div id="missing-vins"></div>
     </div>
 
     <!-- Data cards -->
